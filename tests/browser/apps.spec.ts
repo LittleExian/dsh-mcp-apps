@@ -1,0 +1,45 @@
+import { expect, test } from '@playwright/test'
+for (const width of [360,1200]) {
+  test(`real MCP App roundtrip and isolation at ${width}px`,async({page})=>{
+    await page.setViewportSize({width,height:850})
+    await page.goto('/?strict=1')
+    const app=page.frameLocator('section > iframe').frameLocator('iframe')
+    await expect(page.getByText('Original count: 4',{exact:true})).toBeVisible()
+    await expect(app.getByTestId('count')).toHaveText('4')
+    await expect(app.getByTestId('isolation')).toHaveText('Parent DOM blocked')
+    await app.getByRole('button',{name:'Add one',exact:true}).click()
+    await expect(app.getByTestId('count')).toHaveText('5')
+    await expect(page.getByText('Original count: 4',{exact:true})).toBeVisible()
+    const outer=page.locator('section > iframe')
+    await expect(outer).toHaveAttribute('sandbox','allow-scripts')
+    expect((await outer.boundingBox())!.width).toBeLessThanOrEqual(width)
+    await page.screenshot({path:`test-results/mcp-app-${width}.png`,fullPage:true})
+  })
+}
+test('forged sibling messages cannot call tools or resize the host',async({page})=>{
+  await page.goto('/')
+  const app=page.frameLocator('section > iframe').frameLocator('iframe')
+  await expect(app.getByTestId('count')).toHaveText('4')
+  const before=await page.locator('section > iframe').evaluate(el=>(el as HTMLElement).style.height)
+  await page.evaluate(()=>{
+    const outer=document.querySelector('section > iframe') as HTMLIFrameElement
+    window.postMessage({jsonrpc:'2.0',id:77,method:'tools/call',params:{name:'increment',arguments:{value:100}}},'*')
+    outer.contentWindow!.postMessage({jsonrpc:'2.0',method:'ui/notifications/sandbox-resource-ready',params:{nonce:'forged',html:'<h1>INJECTED</h1>'}},'*')
+    window.postMessage({jsonrpc:'2.0',method:'ui/notifications/size-changed',params:{height:700}},'*')
+  })
+  await app.getByRole('button',{name:'Add one',exact:true}).click()
+  await expect(app.getByTestId('count')).toHaveText('5')
+  await expect(app.getByText('INJECTED')).toHaveCount(0)
+  expect(await page.locator('section > iframe').evaluate(el=>(el as HTMLElement).style.height)).toBe(before)
+})
+test('sandbox blocks top navigation and revokes inner navigation',async({page})=>{
+  await page.goto('/')
+  const app=page.frameLocator('section > iframe').frameLocator('iframe')
+  await expect(app.getByTestId('count')).toHaveText('4')
+  await app.getByText('Sandbox checks',{exact:true}).click()
+  await app.getByRole('button',{name:'Try top navigation'}).click()
+  await expect(app.getByTestId('navigation')).toHaveText('Top navigation blocked')
+  await app.getByRole('button',{name:'Navigate app'}).click()
+  await expect(page.getByRole('alert')).toContainText(/navigated|disconnected/)
+  await expect(page.getByText('Original count: 4',{exact:true})).toBeVisible()
+})

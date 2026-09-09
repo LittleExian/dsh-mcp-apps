@@ -1,0 +1,5 @@
+- insert:
+    - id: wise-mcp-apps
+      name: '@exian/dsh-mcp-apps'
+      config:
+        servers: []
