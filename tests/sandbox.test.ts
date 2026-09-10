@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { buildPolicy, protectHtml } from '../src/sandbox/policy'
 import { proxyHtml } from '../src/sandbox/proxy'
 
-describe('WiseWork sandbox policy', () => {
+describe('double-iframe sandbox policy', () => {
   it('denies network, forms, nested frames and device permissions by default', () => {
     const p = buildPolicy({})
     expect(p.sandbox).toBe('allow-scripts')

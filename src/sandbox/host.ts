@@ -9,7 +9,7 @@ export interface AppCallbacks {
   onClose(): void
 }
 
-/** Mount WiseWork's rendering surface without Electron IPC or any credentials. */
+/** Mount an MCP App rendering surface without exposing host credentials. */
 export function mountApp(iframe: HTMLIFrameElement, preview: AppPreview, callbacks: AppCallbacks): () => void {
   let bridge: AppBridge | undefined
   let stopped = false
@@ -38,7 +38,7 @@ export function mountApp(iframe: HTMLIFrameElement, preview: AppPreview, callbac
   async function start() {
     const policy = buildPolicy(preview.resource._meta?.ui ?? {})
     if (!iframe.contentWindow) throw new Error('MCP App frame is unavailable.')
-    const current = new AppBridge(null, {name:'Wise MCP Apps for DSH',version:'0.1.0'}, {serverTools:{}}, {
+    const current = new AppBridge(null, {name:'MCP Apps Host for DSH',version:'0.1.0'}, {serverTools:{}}, {
       hostContext:{platform:'web',theme:window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
         locale:navigator.language,displayMode:'inline',availableDisplayModes:['inline'],containerDimensions:{maxHeight:720}},
     })

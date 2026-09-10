@@ -2,7 +2,32 @@
 
 这是一个本地 stdio MCP Server，通过 GitHub 官方 REST Search API 查询近期新建仓库，并用 MCP App 界面显示排名、语言、stars、forks 和 issues。
 
+![GitHub Trending MCP App 桌面端](../../docs/images/github-trending-desktop.png)
+
+移动端布局：
+
+![GitHub Trending MCP App 移动端](../../docs/images/github-trending-mobile.png)
+
 GitHub 没有公开其 `github.com/trending` 排名算法或官方 Trending API。本示例采用可解释的近似算法：筛选最近 1、7 或 30 天创建的非归档、非 fork 公共仓库，再按总 stars 降序排列。因此它适合验证 MCP Apps 链路，但结果不会与 GitHub Trending 网页完全一致。
+
+## 实现组成
+
+| 文件 | 作用 |
+| --- | --- |
+| `stdio.ts` | 创建 MCP Server 并连接 `StdioServerTransport` |
+| `server.ts` | 注册模型入口工具、App 专用工具和 HTML resource |
+| `github.ts` | 调用 GitHub REST Search API，完成校验、缓存和错误归一化 |
+| `contract.ts` | 定义筛选参数与结构化返回数据 |
+| `app.ts` | 接收入口结果，通过 AppBridge 调用 `refresh-trending` |
+| `app.html` | 排行榜布局和样式 |
+
+调用路径：
+
+```text
+DSH 模型 → show-trending → GitHub API → structuredContent
+                                      ↓
+聊天卡片 → MCP App → refresh-trending → GitHub API → 更新卡片
+```
 
 ## 构建和本地验收
 

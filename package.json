@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "WiseWork double-iframe MCP Apps host for DeepSeek Harness",
+  "description": "Double-iframe MCP Apps host for DeepSeek Harness",
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
