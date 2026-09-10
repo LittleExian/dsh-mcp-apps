@@ -8,7 +8,7 @@
 | `npm run typecheck` | 通过 |
 | `npm run build` | 生成 ESM Host 和 DSH ModuleLoader Client bundle；demo 构建另生成两个 stdio MCP Server 和单文件 UI |
 | `npm run test:browser` | 4 项真实浏览器测试通过 |
-| `npm run test:trending` | 1 项真实 GitHub REST API → stdio MCP → 双 iframe → App 刷新测试通过 |
+| `npm run test:trending` | 2 项（360px / 1040px）真实 GitHub REST API → stdio MCP → 双 iframe → App 刷新测试通过 |
 | `npm audit` | 0 项已知漏洞 |
 | `npm pack` | 生成 `exian-dsh-mcp-apps-0.1.0.tgz` |
 | 官方 DSH rc.7 安装/启动 | 使用独立 `DSH_HOME` 和 profile，tarball 安装成功，Web 服务启动成功 |
