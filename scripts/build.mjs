@@ -13,4 +13,10 @@ if(process.argv.includes('--demo')) {
   await writeFile('.demo/app.html',html)
   await build({entryPoints:['examples/mcp-server.ts','examples/server.ts'],outdir:'.demo',bundle:true,format:'esm',platform:'node',target:'node22',packages:'external',sourcemap:true})
   await build({entryPoints:['examples/harness.tsx'],outfile:'.demo/harness.js',bundle:true,format:'esm',platform:'browser',target:'es2022',sourcemap:true})
+
+  await mkdir('.demo/github-trending',{recursive:true})
+  const trendingApp=await build({entryPoints:['examples/github-trending/app.ts'],bundle:true,format:'iife',platform:'browser',target:'es2022',write:false,minify:true})
+  const trendingHtml=(await readFile('examples/github-trending/app.html','utf8')).replace('/* APP_BUNDLE */',()=>trendingApp.outputFiles[0].text.replaceAll('</script','<\\/script'))
+  await writeFile('.demo/github-trending/app.html',trendingHtml)
+  await build({entryPoints:['examples/github-trending/stdio.ts'],outfile:'.demo/github-trending/server.js',bundle:true,format:'esm',platform:'node',target:'node22',packages:'external',sourcemap:true})
 }

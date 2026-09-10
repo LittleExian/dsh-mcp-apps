@@ -87,11 +87,13 @@ stdio 的 `env`、HTTP 的 `headers` 留在 DSH 服务端，不传给浏览器�
 
 ## 已验证结果
 
-2026-09-09 验证：72 项单元/集成测试、4 项真实 Chrome 端到端测试通过；语句覆盖率 98%，分支覆盖率 95.59%，函数覆盖率 98.36%，行覆盖率 99.13%。构建、类型检查通过，完整依赖漏洞扫描为零项。
+2026-09-10 验证：78 项单元/集成测试、4 项宿主安全浏览器测试和 1 项真实 GitHub API 浏览器测试通过；语句覆盖率 97.52%，分支覆盖率 93.86%，函数覆盖率 97.81%，行覆盖率 98.89%。构建、类型检查通过，完整依赖漏洞扫描为零项。
 
 已在隔离的官方 DSH `0.1.0-rc.7` Web profile 中安装 tarball 并启动服务：浏览器成功加载插件客户端，`tools/list-ui` 返回真实 stdio 示例工具，无浏览器运行错误。没有修改或部署到用户的云服务器。完整验证范围见 [验证记录](docs/verification.md)。
 
 源码目录的 `examples/README.md` 提供可运行的计数器示例，用于检查原始结果 → UI → 业务工具回调的完整链路；示例源码不包含在安装包中。
+
+`examples/github-trending` 另提供一个真实 GitHub REST API MCP App，包含近期仓库榜单、时间范围和语言筛选，可用于验证新增 MCP Server 的完整接入流程。
 
 ## 开发验证
 
@@ -101,6 +103,7 @@ npm run test:coverage
 npm run typecheck
 npm run build
 npm run test:browser
+npm run test:trending
 ```
 
 开发依赖固定了 rc.7 的公开接口；`--legacy-peer-deps` 用于避免上游预发布版本 peer 范围自动混入 rc.8，运行期仍要求匹配的 DSH 版本。不要把这一选项理解为已经验证其他版本兼容。

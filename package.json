@@ -33,7 +33,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "test:trending": "playwright test --config playwright.trending.config.ts"
   },
   "engines": {
     "node": ">=22.19.0"

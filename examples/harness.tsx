@@ -26,12 +26,12 @@ await new Promise<void>((resolve,reject)=>{
   const script=document.createElement('script');script.src='/plugin.js'
   script.onload=()=>resolve();script.onerror=()=>reject(new Error('Plugin bundle failed to load'));document.head.appendChild(script)
 })
-const bootstrap = await fetch('/bootstrap').then(response=>response.json()) as {tool:McpAppToolViewProps['tool'];block:McpAppToolViewProps['block']}
+const bootstrap = await fetch(`/bootstrap${location.search}`).then(response=>response.json()) as {tool:McpAppToolViewProps['tool'];block:McpAppToolViewProps['block']}
 let renderTool:((props:ToolCallOwnerProps)=>React.ReactNode)|undefined
 await plugin!.apply({connection:{rpc},effect:(callback:()=>unknown)=>callback(),slots:{
   inject:(_name:string,callback:()=>unknown)=>callback(),
   register:(slot:{key:string},component:typeof renderTool)=>{if(slot.key===bootstrap.tool.publicName) renderTool=component;return ()=>{}},
 }} as unknown as ClientContext)
-if(!renderTool) throw new Error('Client plugin did not register the counter tool')
+if(!renderTool) throw new Error('Client plugin did not register the requested UI tool')
 const view=renderTool({block:bootstrap.block,toolName:bootstrap.tool.publicName,callId:'demo-call',openFile:()=>{}})
 createRoot(document.getElementById('root')!).render(new URLSearchParams(location.search).has('strict')?<React.StrictMode>{view}</React.StrictMode>:view)

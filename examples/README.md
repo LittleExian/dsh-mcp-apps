@@ -30,3 +30,14 @@ npm run test:browser
 替换成 DSH **服务器环境**中的绝对路径。示例工具 `show-counter` 对模型可见，`increment` 仅允许 App 调用；资源使用 `text/html;profile=mcp-app`。
 
 本地 HTTP 服务只绑定 `127.0.0.1`，属于测试夹具，不应用作生产网关。生产环境的传输和鉴权由 DSH Connection 提供。
+
+## GitHub Trending MCP App
+
+仓库还包含一个调用 GitHub 官方 REST API 的完整 MCP App：
+
+```sh
+npm run build -- --demo
+npm run test:trending
+```
+
+手动查看时启动 `node .demo/server.js`，打开 `http://127.0.0.1:43187/?app=trending`。它支持今日、本周、本月及语言筛选，界面操作通过 App 专用工具重新查询。配置到真实 DSH 的方法见 [`github-trending/README.md`](github-trending/README.md)。

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GitHub Trending</title>
+  <style>
+    :root{color-scheme:light dark;--ink:#17211b;--muted:#647068;--paper:#f6f5ef;--card:#fff;--line:#dfe2da;--accent:#1f8f58;--accent-soft:#dff4e7;--warm:#f3b33d}
+    *{box-sizing:border-box}html,body{margin:0;min-width:0;background:var(--paper);color:var(--ink);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,select{font:inherit}.shell{max-width:900px;margin:0 auto;padding:14px}.masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+    .eyebrow{margin:0 0 2px;color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.masthead h1{margin:0;font:700 25px/1.15 ui-serif,Georgia,serif;letter-spacing:-.025em}
+    .masthead p{margin:5px 0 0;color:var(--muted);font-size:12px}.approx{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;background:var(--card);color:var(--muted);font-size:11px;white-space:nowrap}.approx::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--warm)}
+    .controls{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(12px)}
+    .periods{display:flex;flex:1;gap:3px}.periods button,.refresh{border:0;border-radius:8px;padding:7px 10px;background:transparent;color:var(--muted);cursor:pointer;font-weight:650}.periods button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+    select{max-width:150px;border:1px solid var(--line);border-radius:8px;padding:6px 28px 6px 9px;background:var(--card);color:var(--ink)}.refresh{border:1px solid var(--line);background:var(--card);color:var(--ink)}button:focus-visible,select:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 35%,transparent);outline-offset:2px}button:disabled,select:disabled{opacity:.55;cursor:wait}
+    .summary{display:flex;justify-content:space-between;gap:12px;margin:12px 2px 8px;color:var(--muted);font-size:12px}.summary strong{color:var(--ink)}[role="alert"]{min-height:20px;margin:8px 2px;color:#b3261e}
+    .list{display:grid;gap:8px}.repo{display:grid;grid-template-columns:42px minmax(0,1fr);gap:11px;border:1px solid var(--line);border-radius:13px;padding:12px;background:var(--card);box-shadow:0 2px 10px rgba(20,38,28,.035)}
+    .rank{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:#12613b;font:800 16px/1 ui-monospace,SFMono-Regular,Menlo,monospace}.repo h2{overflow-wrap:anywhere;margin:0;font-size:15px;line-height:1.3}.repo p{margin:5px 0 8px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.metrics{display:flex;flex-wrap:wrap;gap:7px 13px;color:var(--muted);font-size:12px}.metric{white-space:nowrap}.lang{display:inline-flex;align-items:center;gap:5px}.lang::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}.url{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:7px;color:var(--accent);font:11px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace}
+    .empty{padding:32px 16px;border:1px dashed var(--line);border-radius:13px;text-align:center;color:var(--muted)}.source{margin:12px 2px 2px;color:var(--muted);font-size:11px}
+    @media(max-width:560px){.shell{padding:10px}.masthead{display:block}.approx{margin-top:8px}.controls{align-items:stretch;flex-wrap:wrap}.periods{width:100%;flex-basis:100%}.periods button{flex:1;padding-inline:4px}select{flex:1;max-width:none}.repo{grid-template-columns:34px minmax(0,1fr);padding:10px}.rank{width:32px;height:32px}.summary{display:block}.summary span{display:block;margin-top:2px}}
+    @media(prefers-color-scheme:dark){:root{--ink:#edf3ee;--muted:#a7b1a9;--paper:#101713;--card:#172019;--line:#2b372e;--accent:#68d391;--accent-soft:#1f3a2a;--warm:#f6c35b}.rank{color:#94eab1}.repo{box-shadow:none}}
+    @media(prefers-reduced-motion:no-preference){.repo{animation:rise .22s ease both}@keyframes rise{from{opacity:.2;transform:translateY(4px)}}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div><p class="eyebrow">Open-source momentum</p><h1>GitHub Trending</h1><p>Recently created repositories ranked by stars</p></div>
+      <span class="approx">API approximation</span>
+    </header>
+    <section class="controls" aria-label="Trending filters">
+      <div class="periods" role="group" aria-label="Time period">
+        <button type="button" data-period="daily" aria-pressed="false">Today</button>
+        <button type="button" data-period="weekly" aria-pressed="true">This week</button>
+        <button type="button" data-period="monthly" aria-pressed="false">This month</button>
+      </div>
+      <label><span hidden>Language</span><select id="language" aria-label="Language"></select></label>
+      <button class="refresh" id="refresh" type="button" aria-label="Refresh trending repositories">Refresh</button>
+    </section>
+    <div class="summary"><strong><span data-testid="period-label">This week</span> · <span data-testid="language-label">All languages</span></strong><span data-testid="status">Waiting for data…</span></div>
+    <div role="alert" aria-live="polite"></div>
+    <section class="list" aria-label="Trending repositories" data-testid="repository-list"></section>
+    <p class="source" data-testid="source-note">Source: GitHub REST Search API. This is an explainable approximation, not GitHub.com’s private Trending algorithm.</p>
+  </main>
+  <script>/* APP_BUNDLE */</script>
+</body>
+</html>
