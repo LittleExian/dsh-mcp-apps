@@ -30,6 +30,8 @@ Docker 部署应在 DSH 容器内使用相同的 `DSH_HOME` 和 `web` profile。
 
 ## 连接 MCP Server
 
+完整的安装顺序、MCP 协议返回示例、UI 必备能力、当前兼容边界和验收清单见 [DSH 与 MCP Server 接入手册](docs/integration-guide.md)。
+
 修改 Web profile 中安装时加入的 `wise-mcp-apps` 配置实例，保留它所在的原有 patch 结构。stdio 示例：
 
 ```yaml
@@ -83,7 +85,7 @@ stdio 的 `env`、HTTP 的 `headers` 留在 DSH 服务端，不传给浏览器�
 
 插件拥有自己的 MCP 连接，不依赖 DSH 的 `ctx.mcpApps`。浏览器通过 DSH Connection RPC 访问宿主，工具卡片使用官方 `tool.call.toolview` slot，客户端构建为 DSH ModuleLoader 支持的格式。
 
-详见 [架构与边界](docs/architecture.md)。
+详见 [接入手册](docs/integration-guide.md) 和 [架构与边界](docs/architecture.md)。
 
 ## 已验证结果
 

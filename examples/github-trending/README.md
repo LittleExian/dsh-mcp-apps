@@ -63,7 +63,7 @@ UI 内部的筛选和刷新调用 `refresh-trending`。这个工具标记为 `vi
 
 ```yaml
 env:
-  GITHUB_TOKEN: ${GITHUB_TOKEN}
+  GITHUB_TOKEN: !!js process.env.GITHUB_TOKEN
 ```
 
 不要把真实 Token 提交到仓库。服务端只读取 `GITHUB_TOKEN`，不会把它传给 UI、工具结果或错误信息。相同筛选条件会缓存 5 分钟，以减少 Search API 请求。
