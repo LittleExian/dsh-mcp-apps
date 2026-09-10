@@ -13,7 +13,9 @@
 | `npm pack` | 生成 `exian-dsh-mcp-apps-0.1.0.tgz` |
 | 官方 DSH rc.7 安装/启动 | 使用独立 `DSH_HOME` 和 profile，tarball 安装成功，Web 服务启动成功 |
 | 官方 DSH rc.7 浏览器加载 | 插件 `/plugins/@exian/dsh-mcp-apps/client.js` 返回 200；无 pageerror 或 console error |
-| 官方 DSH rc.7 Host/Client 通信 | `/wise-mcp-apps/tools/list-ui` 返回 `wise_mcp__demo__show-counter` 和 `ui://wise-counter/app.html` |
+| 官方 DSH rc.7 模型工具回合 | 官方 Mock LLM 调用 `wise_mcp__github-trending__show-trending`；DSH 持久化一组成功的 `tool/call` / `tool/result`，回合以 `completed` 结束 |
+| 官方 DSH rc.7 UI 承载 | 原生聊天工具卡片加载 GitHub Trending 双层 iframe；外层与内层均为 `sandbox="allow-scripts"`，设备权限为 `none` |
+| 官方 DSH rc.7 App 回调 | 在 UI 中切换到“今日”后，AppBridge 经宿主调用 app-only `refresh-trending`，榜单和 API 余量均更新 |
 
 ## 浏览器端到端覆盖
 
@@ -30,8 +32,8 @@
 
 ## 实际 DSH 验证的边界
 
-官方 rc.7 的所有 186 个 DSH 依赖包在隔离测试环境中固定到 rc.7，避免上游 `^0.1.0-rc.7` 自动解析成其他版本。验证确认了安装格式、配置层组合、Host 激活、Client ModuleLoader 加载与 UI 工具发现。
+官方 rc.7 源码使用其发布标签 `dsh-v0.1.0-rc.7` 和锁文件构建，避免上游预发布依赖漂移。验证确认了安装格式、配置层组合、Host 激活、Client ModuleLoader 加载、模型工具注册、DSH 原生卡片渲染以及 App 发起的后续工具调用。
 
-没有在官方 DSH 中连接付费模型来发起真实模型回合；工具调用到渲染的完整回路由本地真实 MCP 浏览器 harness 验证。没有验证云服务器反向代理、移动端插件共存、其他 DSH 版本或多用户隔离。
+完整模型回合使用 DSH 官方本地 Mock LLM，未调用付费模型，但工具注册、模型工具事件、MCP Server 执行、结果 metadata、原生聊天渲染 slot、双层 iframe 和 AppBridge 回调均运行在真实 DSH Web profile 中。没有验证云服务器反向代理、移动端插件共存、其他 DSH 版本或多用户隔离。
 
 测试 screenshot/trace 由 Playwright 写入 `test-results/`，覆盖率明细在 `coverage/`；它们是本地产物，不包含在安装包中。

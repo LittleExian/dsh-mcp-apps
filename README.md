@@ -89,7 +89,7 @@ stdio 的 `env`、HTTP 的 `headers` 留在 DSH 服务端，不传给浏览器�
 
 2026-09-10 验证：78 项单元/集成测试、4 项宿主安全浏览器测试和 2 项真实 GitHub API 响应式浏览器测试通过；语句覆盖率 97.52%，分支覆盖率 93.86%，函数覆盖率 97.81%，行覆盖率 98.89%。构建、类型检查通过，完整依赖漏洞扫描为零项。
 
-已在隔离的官方 DSH `0.1.0-rc.7` Web profile 中安装 tarball 并启动服务：浏览器成功加载插件客户端，`tools/list-ui` 返回真实 stdio 示例工具，无浏览器运行错误。没有修改或部署到用户的云服务器。完整验证范围见 [验证记录](docs/verification.md)。
+已在隔离的官方 DSH `0.1.0-rc.7` Web profile 中安装 tarball，并连接 GitHub Trending stdio MCP Server。DSH 官方 Mock LLM 发起真实模型工具回合后，原生聊天卡片成功承载双层 iframe UI；在 UI 中切换到“今日”会经 AppBridge 调用同一 MCP Server 的 `refresh-trending`，并刷新实时 GitHub 数据。浏览器无 error 或 warning。没有修改或部署到用户的云服务器。完整验证范围见 [验证记录](docs/verification.md)。
 
 源码目录的 `examples/README.md` 提供可运行的计数器示例，用于检查原始结果 → UI → 业务工具回调的完整链路；示例源码不包含在安装包中。
 
