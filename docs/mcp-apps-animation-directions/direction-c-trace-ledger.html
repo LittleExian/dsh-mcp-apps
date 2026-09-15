@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>方向 C · Trace Ledger</title>
+  <style>
+    :root{--white:#f7f8f5;--ink:#11130f;--blue:#1657d8;--lime:#b6ed42;--gray:#d7dad3}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#cfd2ca;color:var(--ink)}
+    body{display:grid;place-items:center;font-family:"PingFang SC","Noto Sans SC",sans-serif;padding:28px}
+    .board{width:min(1440px,96vw);aspect-ratio:16/10;background:var(--white);position:relative;overflow:hidden;border:1px solid #a8aca3;box-shadow:0 28px 80px #1c211936}
+    .ruler{position:absolute;left:4.5%;top:0;bottom:0;width:42px;border-left:1px solid #9ba097;border-right:1px solid #9ba097;background:repeating-linear-gradient(to bottom,transparent 0 23px,#9ba097 24px);font:9px ui-monospace,monospace;color:#6f746d}
+    .ruler span{position:absolute;left:7px}.ruler span:nth-child(1){top:8%}.ruler span:nth-child(2){top:42%}.ruler span:nth-child(3){top:77%}
+    header{position:absolute;left:10%;right:6%;top:7%;display:flex;justify-content:space-between;align-items:flex-start}
+    .eyebrow{font:800 12px/1 ui-monospace,monospace;letter-spacing:.14em;color:var(--blue);margin-bottom:15px}h1{font:800 clamp(46px,5.7vw,82px)/.9 "Arial Narrow","PingFang SC",sans-serif;letter-spacing:-.075em;margin:0;max-width:700px}
+    .spec{width:280px;border-top:5px solid var(--ink);padding-top:12px;font:11px/1.55 ui-monospace,monospace}.spec b{color:var(--blue)}
+    .trace{position:absolute;left:10%;right:6%;top:36%;bottom:16%;display:grid;grid-template-columns:120px 1fr;column-gap:22px}
+    .times{font:700 11px/1 ui-monospace,monospace;color:#777d74;display:grid;grid-template-rows:repeat(6,1fr);padding:12px 0}.line{position:relative;border-left:3px solid var(--ink);display:grid;grid-template-rows:repeat(6,1fr)}
+    .event{border-top:1px solid #aeb2aa;display:grid;grid-template-columns:160px 1fr 118px;align-items:center;gap:18px;padding:0 15px;font:12px/1.25 ui-monospace,monospace;position:relative}.event::before{content:"";position:absolute;left:-9px;width:15px;height:15px;background:var(--white);border:3px solid var(--ink);border-radius:50%}.event b{font-size:13px}.event code{color:#585e56}.tag{justify-self:end;padding:7px 9px;border:1px solid var(--ink);font-weight:800;font-size:10px}
+    .event.hot{background:var(--blue);color:white;border-top-color:var(--blue)}.event.hot::before{background:var(--lime);border-color:var(--blue)}.event.hot code{color:#dce7ff}.event.hot .tag{border-color:white}.event:last-child{border-bottom:1px solid #aeb2aa}
+    .packet{position:absolute;left:-10px;top:8%;width:18px;height:18px;background:var(--lime);border:3px solid var(--ink);transform:rotate(45deg);animation:scan 5s cubic-bezier(.7,0,.3,1) infinite}@keyframes scan{0%,7%{top:7%}88%,100%{top:89%}}
+    .footer{position:absolute;left:10%;right:6%;bottom:6%;display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid var(--ink);padding-top:13px}.tone{font:700 13px/1.35 ui-monospace,monospace}.palette{display:flex;gap:6px}.palette i{width:54px;height:11px}.ref{font:10px/1.4 ui-monospace,monospace;color:#666c64;text-align:center}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <aside class="ruler"><span>000</span><span>320</span><span>640</span></aside>
+    <header><div><div class="eyebrow">Direction C / Trace Ledger</div><h1>FOLLOW THE<br>CALL TRACE</h1></div><div class="spec"><b>MCP APPS / DSH</b><br>可审计的运行轨迹<br>每一步都显示：调用者、边界、返回值与权限条件</div></header>
+    <section class="trace"><div class="times"><span>00:00.000</span><span>00:00.042</span><span>00:00.081</span><span>00:00.119</span><span>00:01.340</span><span>00:01.412</span></div><div class="line">
+      <div class="event"><b>DSH MODEL</b><code>tools/call · show-trending</code><span class="tag">MODEL</span></div>
+      <div class="event"><b>PLUGIN HOST</b><code>retain(result) · issue(callToken)</code><span class="tag">TRUSTED</span></div>
+      <div class="event"><b>TOOL CARD</b><code>apps/open(callToken)</code><span class="tag">RPC</span></div>
+      <div class="event"><b>DOUBLE IFRAME</b><code>nonce · null origin · CSP</code><span class="tag">SANDBOX</span></div>
+      <div class="event hot"><b>APPBRIDGE</b><code>callServerTool("refresh-trending")</code><span class="tag">BRIDGE</span></div>
+      <div class="event"><b>MCP SERVER</b><code>CallToolResult · structuredContent</code><span class="tag">APP</span></div>
+      <i class="packet"></i>
+    </div></section>
+    <footer class="footer"><div class="tone">气质：诊断式、精确、工程可信</div><div class="ref">参考语汇：flight recorder / request trace<br>适合：开发者演示、验证报告、问题定位</div><div class="palette"><i style="background:var(--ink)"></i><i style="background:var(--blue)"></i><i style="background:var(--lime)"></i><i style="background:var(--gray)"></i></div></footer>
+  </main>
+</body>
+</html>

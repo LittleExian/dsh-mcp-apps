@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>方向 B · Runtime Theatre</title>
+  <style>
+    :root{--coal:#171815;--sand:#e8dfca;--amber:#efae43;--red:#c54c36;--mint:#9fc4a9}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#080908;color:var(--sand)}
+    body{display:grid;place-items:center;font-family:"PingFang SC","Noto Sans SC",sans-serif;padding:28px}
+    .board{width:min(1440px,96vw);aspect-ratio:16/10;background:var(--coal);position:relative;overflow:hidden;border:1px solid #45423b;box-shadow:0 30px 120px #000}
+    .light{position:absolute;width:78%;height:95%;right:-10%;top:-20%;background:radial-gradient(ellipse at 50% 30%,#d88e4730,transparent 66%);transform:rotate(-12deg)}
+    header{position:absolute;left:6.5%;top:7%;z-index:4}.eyebrow{font:700 12px/1 ui-monospace,monospace;letter-spacing:.19em;color:var(--amber)}
+    h1{font:500 clamp(48px,6vw,86px)/.95 Georgia,"Songti SC",serif;margin:20px 0 0;letter-spacing:-.05em;max-width:690px}.sub{font-size:16px;line-height:1.65;color:#aaa492;max-width:520px;margin-top:20px}
+    .stage{position:absolute;right:4.5%;top:10%;width:49%;height:70%;perspective:1000px;transform-style:preserve-3d}
+    .frame{position:absolute;border:1px solid #8f897a;background:#262722;box-shadow:0 25px 40px #0008;display:flex;align-items:center;justify-content:center;transform-style:preserve-3d}
+    .outer{width:85%;height:76%;right:4%;top:8%;transform:rotateY(-12deg) rotateX(4deg);padding:25px}
+    .outer::before{content:"DSH PLUGIN · TRUSTED PARENT";position:absolute;left:20px;top:14px;font:700 10px/1 ui-monospace,monospace;letter-spacing:.13em;color:var(--amber)}
+    .proxy{width:78%;height:72%;border-color:var(--red);background:#201c19;transform:translateZ(45px);padding:22px}
+    .proxy::before{content:"OUTER IFRAME / RELAY";position:absolute;left:16px;top:13px;font:700 9px/1 ui-monospace,monospace;color:#d57a65;letter-spacing:.12em}
+    .inner{width:75%;height:68%;border-color:var(--mint);background:#f1ecdf;color:#17231d;transform:translateZ(52px);display:block;padding:26px 22px}
+    .inner small{font:700 9px/1 ui-monospace,monospace;color:#4f7d60;letter-spacing:.1em}.inner h2{font:600 27px/1 Georgia,serif;margin:10px 0 14px}.repo{border-top:1px solid #c6c0b1;padding:10px 0;font-size:11px}.repo b{display:block;font-size:13px;margin-bottom:4px}
+    .bridge{position:absolute;left:-6%;top:60%;width:150px;padding:14px;background:var(--amber);color:#171815;transform:translateZ(85px) rotate(-4deg);font:800 13px/1.1 ui-monospace,monospace;box-shadow:8px 10px 0 #0008}.bridge span{display:block;font-size:9px;margin-top:8px;font-weight:600}
+    .pulse{position:absolute;left:10%;top:66%;width:11px;height:11px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 0 #efae4377;animation:pulse 2.2s ease-out infinite}@keyframes pulse{70%,100%{box-shadow:0 0 0 28px transparent}}
+    .chapters{position:absolute;left:6.5%;right:6.5%;bottom:8%;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;border-top:1px solid #514f47;padding-top:18px}.chapter{font:700 11px/1.35 ui-monospace,monospace;color:#868273}.chapter b{display:block;color:var(--sand);font-size:13px;margin-bottom:7px}.chapter:nth-child(3) b{color:var(--red)}.chapter:nth-child(4) b{color:var(--amber)}
+    .palette{position:absolute;right:6.5%;top:84%;display:flex;gap:5px}.palette i{width:42px;height:9px}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <div class="light"></div>
+    <header><div class="eyebrow">Direction B / Runtime Theatre</div><h1>看见一张卡片<br>如何获得能力</h1><p class="sub">把双层 iframe 处理成一座剖开的舞台。镜头逐层推进，能力令牌像聚光灯一样只照亮被允许的那条调用路径。</p></header>
+    <section class="stage">
+      <div class="frame outer"><div class="frame proxy"><div class="frame inner"><small>INNER MCP APP</small><h2>GitHub Trending</h2><div class="repo"><b>01 · human-atlas</b>structuredContent → render</div><div class="repo"><b>02 · routeVSCODE</b>refresh-trending → server</div></div></div></div>
+      <div class="bridge">APPBRIDGE<span>postMessage transport</span></div><i class="pulse"></i>
+    </section>
+    <section class="chapters"><div class="chapter"><b>01 · 入口</b>模型调用工具</div><div class="chapter"><b>02 · 签发</b>callToken → sessionId</div><div class="chapter"><b>03 · 隔离</b>双层 sandbox</div><div class="chapter"><b>04 · 回调</b>AppBridge → apps/call</div><div class="chapter"><b>05 · 兑现</b>Server 返回结果</div></section>
+    <div class="palette"><i style="background:var(--coal)"></i><i style="background:var(--sand)"></i><i style="background:var(--amber)"></i><i style="background:var(--red)"></i><i style="background:var(--mint)"></i></div>
+  </main>
+</body>
+</html>

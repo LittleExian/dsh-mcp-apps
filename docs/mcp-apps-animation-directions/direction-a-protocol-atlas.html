@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>方向 A · Protocol Atlas</title>
+  <style>
+    :root{--paper:#f3efe5;--ink:#18241f;--green:#217a55;--orange:#ef8d32;--line:#bcb8ad;--white:#fffefa}
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;background:#d8d5cc;color:var(--ink)}
+    body{display:grid;place-items:center;font-family:"PingFang SC","Noto Sans SC",sans-serif;padding:28px}
+    .board{width:min(1440px,96vw);aspect-ratio:16/10;background:var(--paper);position:relative;overflow:hidden;border:1px solid #aca89d;box-shadow:0 28px 80px #36352e2d}
+    .grid{position:absolute;inset:0;background-image:linear-gradient(#18241f0b 1px,transparent 1px),linear-gradient(90deg,#18241f0b 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,#000 60%,transparent)}
+    header{position:absolute;left:6.2%;top:7%;width:55%;z-index:2}
+    .eyebrow{font:700 13px/1 ui-monospace,SFMono-Regular,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-bottom:18px}
+    h1{font:600 clamp(42px,5.1vw,76px)/.98 Georgia,"Songti SC",serif;letter-spacing:-.05em;margin:0;text-wrap:balance}
+    .sub{font-size:17px;line-height:1.6;width:78%;margin-top:22px;color:#4a544f}
+    .route{position:absolute;left:6.2%;right:6.2%;bottom:19%;height:27%;display:grid;grid-template-columns:1.05fr .9fr 1.08fr 1.22fr 1.1fr;gap:24px;align-items:center}
+    .node{height:150px;border-top:2px solid var(--ink);padding-top:15px;position:relative;background:linear-gradient(to bottom,#f3efe5cc,transparent)}
+    .node::after{content:"";position:absolute;right:-18px;top:71px;width:12px;height:12px;border-top:2px solid var(--orange);border-right:2px solid var(--orange);transform:rotate(45deg)}
+    .node:last-child::after{display:none}
+    .num{font:700 11px/1 ui-monospace,monospace;color:var(--orange);letter-spacing:.12em}
+    .node h2{font-size:18px;margin:18px 0 8px}.node p{font-size:12px;line-height:1.55;margin:0;color:#647069;max-width:95%}
+    .sandbox{height:174px;border:1px solid var(--ink);padding:10px;margin-top:-14px;position:relative;background:var(--white);box-shadow:9px 9px 0 #ded8c9}
+    .sandbox .inner{height:100%;border:1px dashed var(--green);padding:13px;display:flex;flex-direction:column;justify-content:space-between;background:#edf3ea}
+    .sandbox b{font:700 11px/1 ui-monospace,monospace;letter-spacing:.1em}.sandbox strong{font:600 24px/1.05 Georgia,serif}.sandbox small{color:#587064}
+    .packet{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--orange);top:64px;left:-11px;box-shadow:0 0 0 7px #ef8d3230;animation:packet 5s ease-in-out infinite}
+    @keyframes packet{0%,8%{transform:translateX(0) scale(.8)}80%,100%{transform:translateX(1090px) scale(1)}}
+    .legend{position:absolute;left:6.2%;bottom:7%;display:flex;gap:10px;align-items:center}.swatch{width:60px;height:12px}.tone{font:600 13px/1.2 ui-monospace,monospace;margin-left:16px;letter-spacing:.03em}
+    .ref{position:absolute;right:6.2%;bottom:7%;font:12px/1.4 ui-monospace,monospace;color:#6b736f;text-align:right}
+    .stamp{position:absolute;right:6.2%;top:8%;border:1px solid var(--green);padding:9px 12px;font:700 11px/1 ui-monospace,monospace;color:var(--green);transform:rotate(2deg)}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <div class="grid"></div>
+    <header><div class="eyebrow">Direction A / Protocol Atlas</div><h1>一次调用，<br>穿过五层边界</h1><p class="sub">用连续移动的数据包串起模型、插件宿主、双层沙箱、AppBridge 与 MCP Server。重点是让观众真正理解「能力如何被签发、验证并返回」。</p></header>
+    <div class="stamp">EDITORIAL SYSTEM MAP</div>
+    <section class="route">
+      <article class="node"><span class="num">01 / INTENT</span><h2>DSH 模型</h2><p>调用 model-visible 的 show-trending，得到文本结果与短期 callToken。</p></article>
+      <article class="node"><span class="num">02 / CAPABILITY</span><h2>插件 AppHost</h2><p>保留原始结果，绑定服务器与 UI resource，签发 sessionId。</p></article>
+      <article class="sandbox"><div class="inner"><b>03 / DOUBLE SANDBOX</b><strong>Proxy<br>↳ MCP App</strong><small>opaque origin · nonce · CSP</small></div></article>
+      <article class="node"><span class="num">04 / BRIDGE</span><h2>AppBridge</h2><p>传递 toolInput / toolResult；把 callServerTool 交回可信父页面。</p></article>
+      <article class="node"><span class="num">05 / EXECUTION</span><h2>MCP Server</h2><p>执行 app-visible 的 refresh-trending，返回新的 structuredContent。</p></article>
+      <i class="packet"></i>
+    </section>
+    <div class="legend"><i class="swatch" style="background:var(--ink)"></i><i class="swatch" style="background:var(--green)"></i><i class="swatch" style="background:var(--orange)"></i><span class="tone">气质：编辑式、克制、易讲解</span></div>
+    <div class="ref">参考语汇：information atlas / protocol map<br>适合：技术演示、文档首页、架构讲解</div>
+  </main>
+</body>
+</html>

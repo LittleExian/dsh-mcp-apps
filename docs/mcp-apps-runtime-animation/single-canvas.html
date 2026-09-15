@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MCP Apps 在 DSH 中如何运行</title>
+  <link rel="stylesheet" href="animation.css" />
+</head>
+<body>
+  <main class="shell">
+    <section id="stage" class="stage" aria-label="MCP Apps runtime animation">
+      <div class="paper-grid"></div>
+      <header class="title-block">
+        <div class="kicker">MCP APPS · DEEPSEEK HARNESS</div>
+        <h1 id="scene-title">一张卡片，如何获得安全的应用能力</h1>
+        <p id="scene-subtitle">完整运行过程 · 从模型入口到 App 局部更新</p>
+      </header>
+      <div class="phase-badge"><b id="phase-number">00</b><span id="phase-label">SYSTEM MAP</span></div>
+      <section class="map-viewport">
+        <div id="world" class="world">
+          <div class="lane lane-trusted"><span>TRUSTED HOST</span></div>
+          <div class="lane lane-sandbox"><span>OPAQUE SANDBOX</span></div>
+          <div class="lane lane-service"><span>MCP SERVICE</span></div>
+          <svg class="routes" viewBox="0 0 2050 510" aria-hidden="true">
+            <path class="route-base" d="M120 150 H430 H725 H1030 C1120 150 1150 80 1260 80 H1760" />
+            <path class="route-base" d="M725 150 V355 H1030 H1320 H1530 C1640 355 1650 260 1760 260" />
+            <path id="entry-route" class="route-live route-entry" d="M120 150 H430 H725 H1030 C1120 150 1150 80 1260 80 H1760" />
+            <path id="app-route" class="route-live route-app" d="M725 150 V355 H1030 H1320 H1530 C1640 355 1650 260 1760 260" />
+            <circle id="packet" class="packet" r="11" cx="120" cy="150" />
+          </svg>
+          <article class="node" data-node="model" style="--x:40px;--y:98px"><span class="node-index">01</span><small>INTENT</small><h2>DSH 模型</h2><code>show-trending(args)</code></article>
+          <article class="node" data-node="tools" style="--x:325px;--y:98px"><span class="node-index">02</span><small>REGISTRY</small><h2>Tool Registry</h2><code>wise_mcp__…</code></article>
+          <article class="node node-host" data-node="host" style="--x:620px;--y:98px"><span class="node-index">03</span><small>PLUGIN</small><h2>MCP Apps Host</h2><code>execute · retain · validate</code></article>
+          <article class="node" data-node="server" style="--x:1655px;--y:28px"><span class="node-index">04</span><small>STDIO / HTTP</small><h2>MCP Server</h2><code>tools/call · resources/read</code></article>
+          <article class="node" data-node="card" style="--x:920px;--y:303px"><span class="node-index">05</span><small>DSH CLIENT</small><h2>工具卡片</h2><code>apps/open(callToken)</code></article>
+          <article class="node node-bridge" data-node="bridge" style="--x:1210px;--y:303px"><span class="node-index">06</span><small>OFFICIAL SDK</small><h2>AppBridge</h2><code>PostMessageTransport</code></article>
+          <article class="node node-app" data-node="app" style="--x:1448px;--y:303px"><span class="node-index">07</span><small>INNER IFRAME</small><h2>MCP App</h2><code>App.callServerTool()</code></article>
+          <div class="token token-call">callToken</div>
+          <div class="token token-session">sessionId</div>
+          <div class="split-result"><div><b>MODEL SAFE</b><span>content + structuredContent</span></div><div><b>RETAINED</b><span>original result + ui resource</span></div></div>
+        </div>
+      </section>
+      <section class="detail-stack">
+        <article class="detail" data-detail="0"><span class="detail-tag">OVERVIEW</span><h3>两条路径，共用一个受控能力边界</h3><p>入口路径由模型触发；交互路径由沙箱内 App 触发。插件始终掌握服务器选择与权限验证。</p><div class="mini-ledger"><i></i><span>MODEL INVOCATION</span><i class="blue"></i><span>APP INTERACTION</span></div></article>
+        <article class="detail" data-detail="1"><span class="detail-tag">ENTRY TOOL</span><h3>模型只调用一次入口工具</h3><pre><b>MODEL</b>  tools/call show-trending<br><b>SERVER</b> content + structuredContent + _meta.ui.resourceUri<br><b>HOST</b>   strip UI-only metadata → model-safe result</pre></article>
+        <article class="detail" data-detail="2"><span class="detail-tag">CAPABILITY ISSUE</span><h3>插件把结果与服务器绑定</h3><pre><b>retain</b> original CallToolResult<br><b>bind</b>   server + tool + ui:// resource<br><b>issue</b>  short-lived callToken</pre></article>
+        <article class="detail" data-detail="3"><span class="detail-tag">OPEN VIEW</span><h3>聊天卡片恢复 App 会话</h3><pre><b>CARD</b> apps/open(callToken)<br><b>HOST</b> resources/read(ui://…)<br><b>HOST</b> issue independent sessionId</pre></article>
+        <article class="detail" data-detail="4"><span class="detail-tag">DOUBLE SANDBOX</span><h3>HTML 在两层不透明源 iframe 中运行</h3><div class="check-grid"><span>✓ allow-scripts only</span><span>✓ nonce & window source</span><span>✓ origin = null</span><span>✓ CSP before execution</span><span>✓ navigation revokes view</span><span>✓ no credentials in App</span></div></article>
+        <article class="detail" data-detail="5"><span class="detail-tag">APPBRIDGE</span><h3>官方 SDK 建立 Host ↔ App 协议</h3><pre><b>01</b> initialize / initialized<br><b>02</b> sendToolInput({ arguments })<br><b>03</b> sendToolResult(CallToolResult)<br><b>04</b> sendSizeChanged({ width, height })</pre></article>
+        <article class="detail" data-detail="6"><span class="detail-tag">APP PROCESS</span><h3>交互无需重新经过模型</h3><pre><b>USER</b> click “Today”<br><b>APP</b>  callServerTool("refresh-trending")<br><b>BRIDGE</b> oncalltool → trusted parent</pre></article>
+        <article class="detail" data-detail="7"><span class="detail-tag">VALIDATION</span><h3>Host 决定这次调用是否被允许</h3><div class="check-grid validation"><span>01 session 有效</span><span>02 同一 MCP Server</span><span>03 visibility = app</span><span>04 resource URI 匹配</span><span>05 参数与大小校验</span><span>06 限流与并发限制</span></div></article>
+        <article class="detail" data-detail="8"><span class="detail-tag">STATE UPDATE</span><h3>只更新 App 状态，模型记录保持原样</h3><div class="state-compare"><div><b>DSH SESSION</b><span>show-trending · weekly</span><em>UNCHANGED</em></div><div><b>MCP APP</b><span>refresh-trending · today</span><em>UPDATED</em></div></div></article>
+        <article class="detail" data-detail="9"><span class="detail-tag">HOST CAPABILITIES</span><h3>这个插件实际承载什么</h3><div class="capabilities"><div><b>已承载</b><span>stdio / Streamable HTTP</span><span>UI resource 读取</span><span>AppBridge inline 渲染</span><span>App 工具回调</span><span>双层 iframe 与 CSP</span></div><div><b>当前边界</b><span>无 fullscreen / PiP</span><span>无 sampling / OAuth</span><span>无设备权限</span><span>无第三方嵌套 frame</span><span>无自动重放副作用</span></div></div></article>
+        <article class="detail" data-detail="10"><span class="detail-tag">COMPLETE</span><h3>宿主提供运行时；MCP Server 提供业务与界面</h3><p>新增 MCP App 时，服务器声明入口工具、App 可见工具、UI resource 和 structuredContent；插件负责连接、隔离、渲染与回调。</p></article>
+      </section>
+      <aside id="sandbox-hero" class="sandbox-hero"><div class="outer-label">OUTER PROXY · nonce relay</div><div class="inner-frame"><span>INNER MCP APP · origin null</span><b>GitHub Trending</b><small>HTML resource executes here</small></div></aside>
+      <aside id="bridge-trace" class="bridge-trace"><div class="bridge-side">TRUSTED PARENT</div><div class="bridge-core">APP<br>BRIDGE</div><div class="bridge-side">INNER APP</div><div class="bridge-messages"><span>initialize</span><span>initialized</span><span>toolInput</span><span>toolResult</span></div></aside>
+      <aside id="ui-hero" class="ui-hero"><img src="../images/github-trending-desktop.png" alt="GitHub Trending MCP App real UI" /><div class="cursor"></div><div class="click-ring"></div></aside>
+      <footer class="stage-footer"><span id="running-location">运行位置：DSH Host + Browser</span><span>TypeScript · MCP SDK · Ext Apps · React · iframe sandbox</span></footer>
+    </section>
+    <nav class="controls no-record" aria-label="Animation controls"><button id="play" type="button">暂停</button><input id="scrubber" type="range" min="0" max="92" step="0.01" value="0" /><output id="timecode">00:00 / 01:32</output><div id="chapters" class="chapters"></div></nav>
+  </main>
+  <script src="animation.js"></script>
+</body>
+</html>

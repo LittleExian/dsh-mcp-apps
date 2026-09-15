@@ -68,6 +68,22 @@ flowchart LR
 
 双层 iframe 都不包含 <code>allow-same-origin</code>。外层负责 nonce、消息来源和导航检查，内层执行 MCP Server 返回的 HTML。完整的数据流、安全边界和生命周期见 [架构与技术](docs/architecture.md)。
 
+### 运行过程动画
+
+[MCP Apps 运行过程动画](docs/mcp-apps-runtime-animation/index.html) 将运行过程拆成 15 个独立动画页面，每次只展示一个主题。内容覆盖 DSH 插件启动、模型入口、AppHost、工具卡片、双层 iframe、AppBridge、MCP App 回调、MCP Server，以及 WiseWork 中此前模拟的 OpenCode → DTS MCP App 链路。最后两页分别播放真实 DSH GitHub Trending 调用和 WiseWork DTS 表单录制。
+
+使用左右方向键或 Page Up / Page Down 翻页，按 `R` 重播当前页，按 `O` 打开全部章节。每页加载后会独立开始动画，不依赖统一时间轴。
+
+![MCP Apps 运行过程动画](docs/mcp-apps-runtime-animation/preview.png)
+
+在仓库目录启动静态服务器后查看：
+
+~~~bash
+python3 -m http.server 43190
+~~~
+
+打开 <code>http://127.0.0.1:43190/docs/mcp-apps-runtime-animation/</code>。
+
 ## 技术栈
 
 | 层 | 技术 |
