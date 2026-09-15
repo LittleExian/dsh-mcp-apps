@@ -72,6 +72,8 @@ flowchart LR
 
 [MCP Apps 运行过程动画](docs/mcp-apps-runtime-animation/index.html) 将运行过程拆成 15 个独立动画页面，每次只展示一个主题。内容覆盖 DSH 插件启动、模型入口、AppHost、工具卡片、双层 iframe、AppBridge、MCP App 回调、MCP Server，以及 WiseWork 中此前模拟的 OpenCode → DTS MCP App 链路。最后两页分别播放真实 DSH GitHub Trending 调用和 WiseWork DTS 表单录制。
 
+配套的 [中文逐页说明](docs/mcp-apps-runtime-animation/逐页说明.md) 提供每一页的讲解目标、运行过程、组件职责、关键结论和建议讲解词。
+
 使用左右方向键或 Page Up / Page Down 翻页，按 `R` 重播当前页，按 `O` 打开全部章节。每页加载后会独立开始动画，不依赖统一时间轴。页面底部的中文“本页说明”分别标注当前过程、负责组件和关键结论。
 
 ![MCP Apps 运行过程动画](docs/mcp-apps-runtime-animation/preview.png)
