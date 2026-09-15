@@ -4,10 +4,29 @@ import { resolve } from 'node:path';
 const output = resolve('docs/mcp-apps-runtime-animation/pages');
 await mkdir(output, { recursive: true });
 
+const pageNotes = {
+  '01': ['橙色链路由模型发起，蓝色链路由卡片内的 App 发起。', 'MCP Apps Host 保存调用绑定，并控制两条链路的权限。', 'MCP App 通过 Host 回调原 MCP Server，不会自行直连其他服务。'],
+  '02': ['启动 dsh web 后，DSH 组合 web profile、加载插件并连接 MCP Server。', '插件的 apply(ctx) 创建连接、AppHost 和模型可见工具。', '完成 initialize、tools/list 与 UI 扩展声明后，MCP App 才具备运行条件。'],
+  '03': ['模型根据用户意图选择 show-trending，并把参数交给 MCP Server。', '入口工具对 model 可见，同时声明对应的 UI resource URI。', '这一调用既返回模型结果，也为后续打开交互卡片提供依据。'],
+  '04': ['插件把一次 CallToolResult 分成模型结果和 Host 保留结果。', 'AppHost 保存原结果、输入、服务器身份与资源 URI，并签发 callToken。', '模型无需接触运行 UI 所需的全部元数据，卡片也不能伪造原调用。'],
+  '05': ['工具卡片用 callToken 请求 apps/open，Host 再读取绑定的 HTML 资源。', 'AppHost 恢复原服务器与原工具关系，并为当前视图创建 sessionId。', 'callToken 只能恢复原调用，不能被用来选择另一个 MCP Server。'],
+  '06': ['外层代理 iframe 建立边界，MCP Server 返回的 HTML 只在内层执行。', '外层检查 nonce、消息来源和导航；内层运行 CSP 保护后的 App。', '两个 iframe 都没有 allow-same-origin，因此 App 得不到宿主页面权限。'],
+  '07': ['Host 与 App 通过 initialize、toolInput、toolResult 等消息完成握手。', '官方 AppBridge 与 PostMessageTransport 定义消息格式和回调方式。', '双层 iframe 负责隔离，AppBridge 才负责 MCP Apps 协议通信。'],
+  '08': ['用户点击 Today，App 调用 refresh-trending 并传入 period=day。', 'AppBridge 把 callServerTool 请求交给可信父页面和 Host。', '这是卡片内交互，模型不会重新选择工具或参与本次回调。'],
+  '09': ['Host 对 session、服务器、工具可见性、资源、数据边界和限额逐项校验。', 'AppHost 是 App 调用 MCP Server 前的唯一授权入口。', 'App 只能调用同一服务器、同一资源所允许的 app-visible 工具。'],
+  '10': ['校验通过后，请求沿 apps/call 回到原 MCP Server 的 tools/call。', 'MCP Server 执行业务逻辑并返回新的 CallToolResult。', 'Host 负责安全转发和会话绑定，具体业务仍属于 MCP Server。'],
+  '11': ['refresh-trending 的 structuredContent 返回后，卡片重新渲染为 Today。', 'MCP App 维护当前交互状态，DSH 会话保留最初的 weekly 工具记录。', '卡片内回调不会追加为一次新的模型工具调用。'],
+  '12': ['左侧列出插件运行时能力，右侧列出 MCP Server 与 App 的业务能力。', '插件负责连接、隔离、会话和校验；Server 负责工具、数据、UI 与业务。', '接入新 MCP App 时，通常扩展标准 Server/App，无需修改 DSH 核心。'],
+  '13': ['OpenCode 的 ACP 工具事件依次经过 Runtime Broker、Session Manager 和 IPC。', 'WiseWork 主进程维护会话，Renderer 用双层 iframe 与 AppBridge 承载 DTS App。', '这条模拟链路与 DSH 插件采用相同的 Host、沙箱和 App 回调思路。'],
+  '14': ['实录展示输入请求、模型调用 show-trending、卡片出现并点击 Today。', 'DSH 负责模型与工具事件，插件负责 MCP Apps 的加载和回调。', '录制证明 GitHub Trending MCP Server 能在真实 DSH 中完整运行。'],
+  '15': ['实录展示打开 DTS 表单、填写字段并调用 App-only 提交工具。', 'OpenCode 触发入口工具，WiseWork Host 与 AppBridge 承接后续表单交互。', '最终生成模拟 DTS 编号，验证此前 WiseWork MCP App 链路可交互。'],
+};
+
 function page({ no, chapter, title, subtitle, body, footer }) {
+  const [process, owner, conclusion] = pageNotes[no];
   return `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${no} · ${title}</title><link rel="stylesheet" href="../page.css"></head>
-<body><main class="page"><div class="grid-bg"></div><header class="page-header"><div class="chapter">${chapter}</div><h1>${title}</h1><p>${subtitle}</p><span class="page-no">${no}</span></header><section class="visual">${body}</section><footer class="page-footer"><span>${footer}</span><span>MCP Apps Host for DSH</span></footer><span class="watermark">Created by Huashu-Design</span></main><script src="../page.js"></script></body></html>`;
+<body><main class="page"><div class="grid-bg"></div><header class="page-header"><div class="chapter">${chapter}</div><h1>${title}</h1><p>${subtitle}</p><span class="page-no">${no}</span></header><section class="visual">${body}</section><aside class="page-note rise" style="--delay:.2s" aria-label="本页说明"><strong>本页说明</strong><div><b>发生过程</b><span>${process}</span></div><div><b>负责组件</b><span>${owner}</span></div><div><b>页面结论</b><span>${conclusion}</span></div></aside><footer class="page-footer"><span>${footer}</span><span>MCP Apps Host for DSH</span></footer><span class="watermark">Created by Huashu-Design</span></main><script src="../page.js"></script></body></html>`;
 }
 
 const pages = [
